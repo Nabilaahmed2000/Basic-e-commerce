@@ -12,7 +12,7 @@ class UserController extends Controller
     //display all users api
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(10);
         return UserResource::collection($users);
     }
     //display single user api

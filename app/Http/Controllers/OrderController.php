@@ -15,7 +15,7 @@ class OrderController extends Controller
     public function index()
     {
         //get all orders
-        $orders = order::all();
+        $orders = order::paginate(10);
         return OrderResource::collection($orders);
     }
 
