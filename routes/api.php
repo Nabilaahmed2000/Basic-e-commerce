@@ -33,8 +33,6 @@ Route::middleware(['auth:sanctum', 'blocked'])->group(function () {
 
     //create address api
     Route::post('/addresses', [AddressController::class, 'store']);
-    //display all addresses api
-    Route::get('/addresses', [AddressController::class, 'index']);
     //display single address api
     Route::get('/addresses/{id}', [AddressController::class, 'show']);
     //update address api

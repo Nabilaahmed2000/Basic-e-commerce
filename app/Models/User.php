@@ -29,8 +29,6 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'phone',
-        'profile_img',
-        'is_admin',
         'is_blocked',
     ];
 
@@ -65,6 +63,11 @@ class User extends Authenticatable implements HasMedia
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+    //user has many orders
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
 }

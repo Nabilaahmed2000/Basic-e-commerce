@@ -149,12 +149,5 @@ class CartController extends Controller
        , 'orderItems' => $order->orderItems
     ], 200);
     }
-
-
-    
-    
-
-   
-
    
 }
