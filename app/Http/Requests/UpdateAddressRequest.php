@@ -22,7 +22,6 @@ class UpdateAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'exists:users,id',
             'address_text' => 'string',
             'building_number' => 'string',
             'notes' => 'string',
