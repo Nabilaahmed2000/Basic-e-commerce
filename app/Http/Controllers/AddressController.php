@@ -25,24 +25,24 @@ class AddressController extends Controller
         return response()->json(['message' => 'Address created successfully' , 'address'=> $address], 200);
     }
 
-    public function show(Address $address)
+    public function show(Address $address , $id)
     {
-        $address = auth()->user()->addresses()->where('id', $address->id)->first();
+        $address = auth()->user()->addresses()->where('id', $id)->first();
         return response()->json(['address' => $address], 200);
     }
 
     public function update(UpdateAddressRequest $request, Address $address, $id)
     {
         //update specific address for the authenticated user
-        $address = auth()->user()->addresses()->update($request->validated());
+        $address = auth()->user()->addresses()->where('id', $id)->update($request->validated());
         return response()->json(['message' => 'Address updated successfully'], 200);
     }
 
 
-    public function destroy(Address $address)
+    public function destroy(Address $address , $id)
     {
         //delete specific address for the authenticated user
-        $address = auth()->user()->addresses()->where('id', $address->id)->first();
+        $address = auth()->user()->addresses()->where('id', $id)->first();
         $address->delete();
         return response()->json(['message' => 'Address deleted successfully'], 200);
     }
