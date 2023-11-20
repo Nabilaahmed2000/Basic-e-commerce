@@ -22,7 +22,10 @@ class UpdateorderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'exists:users,id',
+            'address_id' => 'exists:addresses,id',
+            'total_price' => 'float',
+            'status' => 'enum:processing,completed,delivered',
         ];
     }
 }
