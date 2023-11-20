@@ -9,13 +9,15 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory , InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
     protected $fillable = [
         'name',
         'description',
         'price',
         'quantity',
     ];
-  
-
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }

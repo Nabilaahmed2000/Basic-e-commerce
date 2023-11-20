@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\tokenController;
 use App\Http\Controllers\Website\AddressController;
 use App\Http\Controllers\CartController;
+use Illuminate\Routing\Route as RoutingRoute;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,17 +31,7 @@ Route::post('/sanctum/token', [tokenController::class, 'createToken']);
 
 Route::middleware(['auth:sanctum', 'blocked'])->group(function () {
     /******************************* Address **************************************** */
-
-    //create address api
-    Route::post('/addresses', [AddressController::class, 'store']);
-    //display all addresses api
-    Route::get('/addresses', [AddressController::class, 'index']);
-    //display single address api
-    Route::get('/addresses/{id}', [AddressController::class, 'show']);
-    //update address api
-    Route::put('/addresses/{id}', [AddressController::class, 'update']);
-    //delete address api
-    Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
+    Route::apiResource('addresses', AddressController::class);
 
     /******************************* Cart **************************************** */
 
@@ -61,15 +52,7 @@ Route::middleware(['auth:sanctum', 'blocked'])->group(function () {
     /******************************* User **************************************** */
 
 
-    //display all users api
-    Route::get('/users', [UserController::class, 'index']);
-    //display single user api
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    //update user api
-    Route::put('/users/{id}', [UserController::class, 'update']);
-    //delete user api
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
-
+    Route::apiResource('users', UserController::class);
 
 
 

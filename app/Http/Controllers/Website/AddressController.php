@@ -27,14 +27,14 @@ class AddressController extends Controller
 
     public function show($id)
     {
-        $address = auth()->user()->addresses()->where('id', $id)->first();
+        $address = auth()->user()->addresses()->find($id)->first();
         return response()->json(['address' => $address], 200);
     }
 
     public function update(UpdateAddressRequest $request, $id)
     {
         //update specific address for the authenticated user
-        $address = auth()->user()->addresses()->where('id', $id)->update($request->validated());
+        $address = auth()->user()->addresses()->find($id)->update($request->validated());
         return response()->json(['message' => 'Address updated successfully'], 200);
     }
 
@@ -42,7 +42,7 @@ class AddressController extends Controller
     public function destroy($id)
     {
         //delete specific address for the authenticated user
-        $address = auth()->user()->addresses()->where('id', $id)->first();
+        $address = auth()->user()->addresses()->find($id)->first();
         $address->delete();
         return response()->json(['message' => 'Address deleted successfully'], 200);
     }
