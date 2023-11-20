@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Website;
 
 use App\Models\Address;
 use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
-use App\Models\User;
+use App\Http\Controllers\Controller;
 
 class AddressController extends Controller
 {
@@ -25,13 +25,13 @@ class AddressController extends Controller
         return response()->json(['message' => 'Address created successfully' , 'address'=> $address], 200);
     }
 
-    public function show(Address $address , $id)
+    public function show($id)
     {
         $address = auth()->user()->addresses()->where('id', $id)->first();
         return response()->json(['address' => $address], 200);
     }
 
-    public function update(UpdateAddressRequest $request, Address $address, $id)
+    public function update(UpdateAddressRequest $request, $id)
     {
         //update specific address for the authenticated user
         $address = auth()->user()->addresses()->where('id', $id)->update($request->validated());
@@ -39,7 +39,7 @@ class AddressController extends Controller
     }
 
 
-    public function destroy(Address $address , $id)
+    public function destroy($id)
     {
         //delete specific address for the authenticated user
         $address = auth()->user()->addresses()->where('id', $id)->first();

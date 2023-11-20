@@ -7,7 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\tokenController;
-use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Website\AddressController;
 use App\Http\Controllers\CartController;
 
 /*
