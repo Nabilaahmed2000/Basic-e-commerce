@@ -43,6 +43,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
+        if ($request->hasFile('profile_img')) {
+            $image = $request->file('profile_img');
+            $user->media()->delete();
+            $user->addMedia($image)->toMediaCollection('profile_imges');
+        }
+
         $user->update($request->all());
         return new UserResource($user);
     }
