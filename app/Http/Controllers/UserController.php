@@ -45,7 +45,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         if ($request->hasFile('profile_img')) {
             $image = $request->file('profile_img');
-            $user->media()->delete();
+            $user->clearMediaCollection('profile_img');
             $user->addMedia($image)->toMediaCollection('profile_imges');
         }
 
