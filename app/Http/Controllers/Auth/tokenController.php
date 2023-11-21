@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 
 
-class tokenController extends Controller
+class TokenController extends Controller
 {
 
     protected function validator(array $data)

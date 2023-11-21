@@ -24,7 +24,6 @@ class StoreorderRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'address_id' => 'required|exists:addresses,id',
-            'total_price' => 'required|float',
             'status' => 'required|enum:processing,completed,delivered',
         ];
     }

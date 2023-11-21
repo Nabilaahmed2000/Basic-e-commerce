@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Website;
+namespace App\Http\Controllers;
 
 use App\Models\Address;
 use App\Http\Requests\StoreAddressRequest;

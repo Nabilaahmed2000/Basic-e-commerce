@@ -6,9 +6,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\tokenController;
-use App\Http\Controllers\Website\AddressController;
+use App\Http\Controllers\Auth\TokenController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Routing\Route as RoutingRoute;
 
 /*
@@ -39,7 +40,6 @@ Route::middleware(['auth:sanctum', 'blocked'])->group(function () {
     Route::post('/carts', [CartController::class, 'newCart']);
     //add cart item api
     Route::post('/carts/items', [CartController::class, 'addCartItem']);
-
     //display single cart api for user
     Route::get('/carts', [CartController::class, 'getCartDetails']);
     //delete cart item api
@@ -47,7 +47,7 @@ Route::middleware(['auth:sanctum', 'blocked'])->group(function () {
     //update cart item quantity api
     Route::put('/carts/items/{id}', [CartController::class, 'updateCartItem']);
     //checkout cart api
-    Route::post('/carts/checkout', [CartController::class, 'checkoutCart']);
+    Route::post('/carts/checkout', [CartController::class, 'checkout']);
 
     /******************************* User **************************************** */
 

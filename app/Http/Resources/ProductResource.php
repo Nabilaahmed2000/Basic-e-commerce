@@ -19,9 +19,15 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'price' => (float) $this->price,
             'description' => $this->description,
-            // 'image' => $this->image,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-       ];
+            'images' => $this->getMediaUrls('photos'),
+        ];
+    }
+    protected function getMediaUrls(string $collectionName): array
+    {
+        return $this->getMedia($collectionName)->map(function ($item) {
+            return $item->getUrl();
+        })->toArray();
     }
 }

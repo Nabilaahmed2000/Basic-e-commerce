@@ -38,13 +38,13 @@ class CartController extends Controller
         $quantity = $request->input('quantity');
 
         // Check if the product exists and has sufficient quantity
-        $product = $cart->cartItems->where('product_id', $productId)->first();
-        if (!$product || $product->product->quantity < $quantity) {
+        $product = Product::find($productId);
+        if (!$product || $product->quantity < $quantity) {
             return response()->json(['error' => 'Invalid product or insufficient quantity'], 422);
         }
 
         // Update product quantity
-        $product->product->decrement('quantity', $quantity);
+        $product->decrement('quantity', $quantity);
 
         // Add new cart item using cart relationship
         $cartItem = $cart->cartItems()->create([
@@ -56,12 +56,7 @@ class CartController extends Controller
     }
 
 
-    //list all products in all carts
-    public function listProductsInCart()
-    {
-        $cartItems = CartItem::all();
-        return response()->json(['cartItems' => $cartItems]);
-    }
+    
 
     //get specific cart details
     public function getCartDetails()
@@ -126,7 +121,7 @@ class CartController extends Controller
 
 
     //checkout
-    public function checkout($address_id)
+    public function checkout(Request $request)
     {
         // Get the user's cart with its items and related products
         $cart = auth()->user()->cart()->with('cartItems.product')->first();
@@ -144,14 +139,11 @@ class CartController extends Controller
             $totalPrice += $product->price * $cartItem->quantity;
             $products[] = $product;
         }
-
-        // Delete cart items
-        $cart->cartItems()->delete();
-
+        
         // Make a new order and add order items
         $order = Order::create([
             'user_id' => auth()->user()->id,
-            'address_id' => $address_id,
+            'address_id' => $request->input('address_id'),
             'total' => $totalPrice,
             'status' => 'processing',
         ]);
@@ -164,6 +156,8 @@ class CartController extends Controller
                 'price' => $cartItem->product->price * $cartItem->quantity,
             ]);
         }
+        // Delete cart items
+        $cart->cartItems()->delete();
 
         return response()->json([
             'message' => 'Checkout successful', 'orderItems' => $order->orderItems
