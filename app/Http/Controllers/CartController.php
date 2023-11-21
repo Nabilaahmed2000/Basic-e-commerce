@@ -78,96 +78,95 @@ class CartController extends Controller
 
     //delete cart item
     public function deleteCartItem($id)
-{
-    // Get the cart item with its related product
-    $cartItem = CartItem::with('product')->find($id);
+    {
+        // Get the cart item with its related product
+        $cartItem = CartItem::with('product')->find($id);
 
-    // Check if the cart item exists
-    if (!$cartItem) {
-        return response()->json(['error' => 'Cart item not found'], 404);
+        // Check if the cart item exists
+        if (!$cartItem) {
+            return response()->json(['error' => 'Cart item not found'], 404);
+        }
+
+        // Update product quantity
+        $cartItem->product->increment('quantity', $cartItem->quantity);
+
+        // Delete cart item
+        $cartItem->delete();
+
+        return response()->json(['message' => 'Cart item deleted successfully'], 200);
     }
-
-    // Update product quantity
-    $cartItem->product->increment('quantity', $cartItem->quantity);
-
-    // Delete cart item
-    $cartItem->delete();
-
-    return response()->json(['message' => 'Cart item deleted successfully'], 200);
-}
 
 
     //update cart item quantity
     public function updateCartItem(Request $request, $id)
-{
-    // Get the cart item with its related product
-    $cartItem = CartItem::with('product')->find($id);
+    {
+        // Get the cart item with its related product
+        $cartItem = CartItem::with('product')->find($id);
 
-    // Check if the cart item exists
-    if (!$cartItem) {
-        return response()->json(['error' => 'Cart item not found'], 404);
+        // Check if the cart item exists
+        if (!$cartItem) {
+            return response()->json(['error' => 'Cart item not found'], 404);
+        }
+
+        // Check if product quantity is sufficient
+        $requestedQuantity = $request->input('quantity');
+        if ($cartItem->product->quantity < $requestedQuantity) {
+            return response()->json(['error' => 'Product quantity is less than the quantity requested'], 422);
+        }
+
+        // Update product quantity
+        $cartItem->product->decrement('quantity', $requestedQuantity);
+
+        // Update cart item quantity
+        $cartItem->quantity = $requestedQuantity;
+        $cartItem->save();
+
+        return response()->json(['message' => 'Cart item updated successfully'], 200);
     }
-
-    // Check if product quantity is sufficient
-    $requestedQuantity = $request->input('quantity');
-    if ($cartItem->product->quantity < $requestedQuantity) {
-        return response()->json(['error' => 'Product quantity is less than the quantity requested'], 422);
-    }
-
-    // Update product quantity
-    $cartItem->product->decrement('quantity', $requestedQuantity);
-
-    // Update cart item quantity
-    $cartItem->quantity = $requestedQuantity;
-    $cartItem->save();
-
-    return response()->json(['message' => 'Cart item updated successfully'], 200);
-}
 
 
     //checkout
     public function checkout($address_id)
-{
-    // Get the user's cart with its items and related products
-    $cart = auth()->user()->cart()->with('cartItems.product')->first();
+    {
+        // Get the user's cart with its items and related products
+        $cart = auth()->user()->cart()->with('cartItems.product')->first();
 
-    if (!$cart) {
-        return response()->json(['error' => 'User does not have a cart'], 404);
-    }
+        if (!$cart) {
+            return response()->json(['error' => 'User does not have a cart'], 404);
+        }
 
-    // Calculate total price and gather products
-    $totalPrice = 0;
-    $products = [];
+        // Calculate total price and gather products
+        $totalPrice = 0;
+        $products = [];
 
-    foreach ($cart->cartItems as $cartItem) {
-        $product = $cartItem->product;
-        $totalPrice += $product->price * $cartItem->quantity;
-        $products[] = $product;
-    }
+        foreach ($cart->cartItems as $cartItem) {
+            $product = $cartItem->product;
+            $totalPrice += $product->price * $cartItem->quantity;
+            $products[] = $product;
+        }
 
-    // Delete cart items
-    $cart->cartItems()->delete();
+        // Delete cart items
+        $cart->cartItems()->delete();
 
-    // Make a new order and add order items
-    $order = Order::create([
-        'user_id' => auth()->user()->id,
-        'address_id' => $address_id,
-        'total' => $totalPrice,
-        'status' => 'processing',
-    ]);
-
-    foreach ($cart->cartItems as $cartItem) {
-        OrderItem::create([
-            'order_id' => $order->id,
-            'product_id' => $cartItem->product->id,
-            'quantity' => $cartItem->quantity,
-            'price' => $cartItem->product->price * $cartItem->quantity,
+        // Make a new order and add order items
+        $order = Order::create([
+            'user_id' => auth()->user()->id,
+            'address_id' => $address_id,
+            'total' => $totalPrice,
+            'status' => 'processing',
         ]);
+
+        foreach ($cart->cartItems as $cartItem) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $cartItem->product->id,
+                'quantity' => $cartItem->quantity,
+                'price' => $cartItem->product->price * $cartItem->quantity,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Checkout successful', 'orderItems' => $order->orderItems
+        ], 200);
     }
-
-    return response()->json([
-        'message' => 'Checkout successful', 'orderItems' => $order->orderItems
-    ], 200);
-}
-
 }

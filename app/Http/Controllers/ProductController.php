@@ -25,25 +25,18 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create([
-            'name' => $request->name,
-            'quantity' => $request->quantity,
-            'price' => (float) $request->price,
-            'description' => $request->description,
-        ]
-        );
-try {
-    if ($request->hasFile('photo')) {
-        $fileAdders = $product->addMultipleMediaFromRequest(['photo'])
-            ->each(function ($fileAdder) {
-                $fileAdder->toMediaCollection('photos');
-            });
-    }
-}
-        catch(\Exception $e){
+        $product = Product::create($request->validated());
+        try {
+            if ($request->hasFile('photo')) {
+                $fileAdders = $product->addMultipleMediaFromRequest(['photo'])
+                    ->each(function ($fileAdder) {
+                        $fileAdder->toMediaCollection('photos');
+                    });
+            }
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error in uploading images'], 500);
         }
-       
+
         return new ProductResource($product);
     }
 
@@ -56,25 +49,24 @@ try {
         return new ProductResource($product);
     }
 
-   
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product ,$id)
+    public function update(UpdateProductRequest $request, Product $product, $id)
     {
-        
+
         $product = Product::findOrFail($id);
-       // return $request;
-        try{
+        // return $request;
+        try {
             $product->update($request->all());
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Error in updating product'], 500);
         }
-        
+
         return new ProductResource($product);
     }
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -91,7 +83,7 @@ try {
         // Get parameters from the request
         $name = $request->input('name');
         $sortBy = $request->input('sort_by'); // 'price_high', 'price_low'
-        
+
         // Start building the query
         $query = Product::query();
 
@@ -115,5 +107,3 @@ try {
         return response()->json(['products' => $filteredProducts]);
     }
 }
-    
-

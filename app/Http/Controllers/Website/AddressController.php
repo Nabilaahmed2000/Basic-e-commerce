@@ -22,7 +22,7 @@ class AddressController extends Controller
     {
 
         $address = auth()->user()->addresses()->create($request->validated());
-        return response()->json(['message' => 'Address created successfully' , 'address'=> $address], 200);
+        return response()->json(['message' => 'Address created successfully', 'address' => $address], 200);
     }
 
     public function show($id)
