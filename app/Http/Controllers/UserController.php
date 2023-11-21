@@ -41,17 +41,20 @@ class UserController extends Controller
     }
     //update user api
     public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        if ($request->hasFile('profile_img')) {
-            $image = $request->file('profile_img');
-            $user->clearMediaCollection('profile_img');
-            $user->addMedia($image)->toMediaCollection('profile_imges');
-        }
+{
+    $user = User::findOrFail($id);
 
-        $user->update($request->all());
-        return new UserResource($user);
+    if ($request->hasFile('profile_img')) {
+        $image = $request->file('profile_img');
+        $user->clearMediaCollection('profile_img');
+        $user->addMedia($image)->toMediaCollection('profile_images');
     }
+    $user->update($request->all());
+    return $user;
+
+    return new UserResource($user);
+}
+
     //delete user api
     public function destroy($id)
     {

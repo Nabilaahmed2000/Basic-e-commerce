@@ -75,7 +75,7 @@ Route::middleware(['auth:sanctum', 'blocked'])->group(function () {
     //show order details api
     Route::get('/orders/{id}/details', [OrderController::class, 'showOrderDetails']);
     //update order Status api
-    Route::put('/orders/{id}/status', [OrderController::class, 'updateOrderStatus']);
+    Route::put('/orders/{order}/update-status/{newStatus}', [OrderController::class, 'updateOrderStatus']);
     //filter orders api
     Route::get('/orders/filter', [OrderController::class, 'filterOrders']);
 });

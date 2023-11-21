@@ -26,24 +26,15 @@ class OrderController extends Controller
         return OrderResource::collection($userOrders);
     }
 
-    //showing order details
-    // public function showOrderDetails(order $order)
-    // {
-    //     //get order details
-    //     $orderItems = $order->orderItems;
-    //     return $orderItems;
-    // }
-
     //updating order to change it from processing to completed or delivered
     public function updateOrderStatus(Order $order, $newStatus)
     {
-        // Update order status
-        $order->status = $newStatus;
+        $order->status = $newStatus;  
         $order->save();
-
+    
         return new OrderResource($order);
     }
-
+    
     //filter orders based on date range or order status 
     public function filterOrders(Request $request)
     {
